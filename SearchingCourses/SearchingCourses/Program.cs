@@ -11,11 +11,12 @@ namespace SearchingCourses
     {
         static void Main(string[] args)
         {
-            //var songLyrics = new SongLyrics("Shakira", "Nada");
+            var songLyrics = new SongLyrics("Eminem", "Without me");
 
-            var profanityFinder = new ProfanityFinder("no, kurwa !");
+            var profanityFinder = new ProfanityFinder();
 
-
+            var Censored = profanityFinder.Censored(songLyrics.lyrics);
+            Console.WriteLine(Censored);
            Console.WriteLine("Done");
             Console.ReadLine();
         }
@@ -23,9 +24,29 @@ namespace SearchingCourses
 
     class ProfanityFinder
     {
-        public ProfanityFinder(string text)
+
+        private string[] badwords;
+
+
+        public ProfanityFinder()
         {
-            var dictFile = File.ReadAllText("../profanities.");
+            
+
+
+            var dictFile = File.ReadAllText("../profanities.txt");
+            dictFile = dictFile.Replace("*", "");
+            badwords = dictFile.Split(new[] { "\",\"" },StringSplitOptions.None);
+           
+            
+        }
+
+         public string Censored(string text)
+        {
+            foreach(var word in badwords)
+            {
+                text = text.Replace(" "+word+" ", " ___ ");
+            }
+            return text;
         }
     }
 }
