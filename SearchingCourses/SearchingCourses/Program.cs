@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SearchingCourses
@@ -35,6 +36,8 @@ namespace SearchingCourses
 
             var dictFile = File.ReadAllText("../profanities.txt");
             dictFile = dictFile.Replace("*", "");
+            dictFile = dictFile.Replace("(", "");
+            dictFile = dictFile.Replace(")", "");
             badwords = dictFile.Split(new[] { "\",\"" },StringSplitOptions.None);
            
             
@@ -44,9 +47,17 @@ namespace SearchingCourses
         {
             foreach(var word in badwords)
             {
-                text = text.Replace(" "+word+" ", " ___ ");
+                text = RemoveBadWord(text, word);
             }
             return text;
+        }
+
+        private static string RemoveBadWord(string text, string word)
+        {
+            var pattern = "\\b" + word + "\\b";
+
+            return Regex.Replace(text, pattern, "____",RegexOptions.IgnoreCase);
+           
         }
     }
 }
